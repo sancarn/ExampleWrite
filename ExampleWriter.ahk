@@ -1,4 +1,4 @@
-﻿;Get file path of example file:
+;Get file path of example file:
 FileSelectFile, ExampleFile
 
 if !ExampleFile
