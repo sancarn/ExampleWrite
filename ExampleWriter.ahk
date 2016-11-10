@@ -8,7 +8,7 @@ if !ExampleFile
 FileRead, ExampleContents, %ExampleFile%
 
 ;Prepare Regex:
-ExampleExtract := "(\w+?\.\w+?)\s*\{\s*[\r\n]+((?:.|\s)*?)\}"
+ExampleExtract := "(.+?\.\w+?)\s*\{\s*[\r\n]+((?:.|\s)*?)\}"
 
 ;Find all matches and use doActions function
 Pos:=1
