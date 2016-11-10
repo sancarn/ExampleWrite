@@ -8,7 +8,7 @@ if !ExampleFile
 FileRead, ExampleContents, %ExampleFile%
 
 ;Prepare Regex:
-ExampleExtract := "(.+?\.\w+?)\s*\{\s*[\r\n]+((?:.|\s)*?)\}"
+ExampleExtract := "(?![\r\n])(.+?\.\w+?)\s*\{\s*[\r\n]+((?:.|\s)*?)\}"
 
 ;Find all matches and use doActions function
 Pos:=1
@@ -24,11 +24,26 @@ While Pos {
 ExitApp
 
 doActions(objOut){
-	FileName := objOut.Value(1)
+	;get fileName from objOut
+	FileName := Trim(objOut.Value(1))
+	
+	;make containing folders
+	MakeFolders(FileName)
+	
+	;get file contents
 	FileContents := objOut.Value(2)
+	
+	;Delete old file, if exists
 	FileDelete, %FileName%
+	
+	;Get file contents
 	FileContents := RemoveIndent(FileContents)
+	
+	;Append fileContents to file
 	FileAppend, %FileContents%, %FileName%
+	
+	
+	;msgbox, %FileName%`r`n%FileContents%
 }
 
 RemoveIndent(s){
@@ -36,8 +51,6 @@ RemoveIndent(s){
 	
 	;Get indent of first line
 	Pos:=RegExMatch(s,"\S")
-	
-	
 		
 	;Create new indentless string
 	r := ""
@@ -47,4 +60,12 @@ RemoveIndent(s){
 	}
 	
 	return r
+}
+
+MakeFolders(s){
+	pos := InStr(s,"\",,-1)
+	if pos {
+		DirName := trim(SubStr(s,1,pos-1))
+		FileCreateDir, %DirName%
+	}
 }
